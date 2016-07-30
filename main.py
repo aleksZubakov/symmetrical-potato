@@ -92,10 +92,6 @@ def get_random_soundtrack(bot, update):
     url = get_track_url()
     chat_id = update.message.chat_id
 
-def get_random_soundtrack(bot, update):
-    url = get_track_url()
-    chat_id = update.message.chat_id
-
     wait_text = "Please wait a few seconds, i'm sending you an audio :)"
     bot.sendMessage(chat_id=chat_id, text=wait_text)
 
@@ -105,11 +101,8 @@ def get_random_soundtrack(bot, update):
 on_start_handler = CommandHandler( 'start', on_start_command )
 on_init_hanlder = CommandHandler('init', on_init_command, pass_args=True)
 on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
-
 text_message_handler = MessageHandler([Filters.text], on_text_message)
 get_audio_handler = CommandHandler('random', get_random_soundtrack)
-freid_handler = MessageHandler([Filters.text], grandfather_freid)
-get_audio_handler = CommandHandler('random_audio', get_random_soundtrack)
 
 
 # assign handlers
