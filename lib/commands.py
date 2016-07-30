@@ -1,5 +1,6 @@
 import telegram
 from telegram.ext import CommandHandler
+import random
 
 from globals import CURRENT_CHATS
 from muzis_api_requests import get_track_url
@@ -84,6 +85,38 @@ def get_random_soundtrack(bot, update):
     bot.sendAudio(chat_id=chat_id, audio=url)
 
 
+def on_hey_command(bot, update):
+
+    answers = [
+        "How are you?",
+        "How it's going?",
+        "How was you day?",
+        "How is everything going so far?",
+        "What's up?",
+        "What's new?"
+    ]
+
+    user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
+    invitation = 'Hello ' + user_name + '!'
+
+    chat_id = update.message.chat_id
+
+    if chat_id < 0:
+        bot.sendMessage(chat_id=chat_id,
+                        text="Sorry, but /hey only available in one-on-one talks with the great Doctor @MusicFreid_bot")
+        return
+
+    active = CURRENT_CHATS[ chat_id ] = {}
+    active['conv_active'] = True
+    active['messages'] = list()
+
+    bot.sendMessage(chat_id=chat_id,
+                    text=invitation + " " + random.choice(answers))
+
+    print(CURRENT_CHATS)
+
+
+
 
 # on_start_handler = CommandHandler( 'start', on_start_command )
 # on_init_handler = CommandHandler('init', on_init_command, pass_args=True)
@@ -95,5 +128,6 @@ COMMAND_EXPORT = [ CommandHandler('start', on_start_command),
                    CommandHandler('init', on_init_command, pass_args=True),
                    CommandHandler('get', on_get_command),
                    CommandHandler('help', on_help_command),
-                   CommandHandler('random', get_random_soundtrack)
+                   CommandHandler('random', get_random_soundtrack),
+                   CommandHandler('hey', on_hey_command)
                    ]
