@@ -53,6 +53,10 @@ def on_init_command(bot, update, args):
         bot.sendMessage( chat_id=chat_id,
                          text="Sorry, but argument must be a number" )
         return
+    except IndexError:
+        bot.sendMessage( chat_id=chat_id,
+                         text="Sorry, but you didn't passed any arguments. Try 15, it might work :)")
+        return
 
     # creating new var in global vault
     chat_status = CURRENT_CHATS[ chat_id ] = {}
