@@ -77,7 +77,6 @@ def on_text_message(bot, update):
 
     chat_id = update.message.chat_id
 
-<<<<<<< HEAD
     try:
         active = CURRENT_CHATS[ chat_id ]
         active['messages'].append(message_text)
@@ -92,28 +91,25 @@ def on_text_message(bot, update):
 def get_random_soundtrack(bot, update):
     url = get_track_url()
     chat_id = update.message.chat_id
-=======
+
 def get_random_soundtrack(bot, update):
     url = get_track_url()
     chat_id = update.message.chat_id
 
     wait_text = "Please wait a few seconds, i'm sending you an audio :)"
     bot.sendMessage(chat_id=chat_id, text=wait_text)
->>>>>>> 1054a2f2300b6074695f1c12202b16866bdc5cfe
+
     bot.sendAudio(chat_id=chat_id, audio=url)
 
 # handlers
 on_start_handler = CommandHandler( 'start', on_start_command )
 on_init_hanlder = CommandHandler('init', on_init_command, pass_args=True)
 on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
-<<<<<<< HEAD
+
 text_message_handler = MessageHandler([Filters.text], on_text_message)
 get_audio_handler = CommandHandler('random', get_random_soundtrack)
-
-=======
 freid_handler = MessageHandler([Filters.text], grandfather_freid)
 get_audio_handler = CommandHandler('random_audio', get_random_soundtrack)
->>>>>>> 1054a2f2300b6074695f1c12202b16866bdc5cfe
 
 
 # assign handlers
