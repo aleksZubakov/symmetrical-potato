@@ -6,6 +6,21 @@ from globals import CURRENT_CHATS
 from muzis_api_requests import get_track_url
 
 
+
+# helpers
+# deactivate chat
+def deactivate_conv( chat_id ):
+    if chat_id > 0:
+        try:
+            active = CURRENT_CHATS[chat_id]
+            active['conv_active'] = False
+            active['messages'] = []
+
+        except (KeyError, IndexError):
+            pass
+
+
+
 def on_start_command(bot, update):
     user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
     invitation = 'Hello ' + user_name + '!'
@@ -52,17 +67,24 @@ def on_init_command(bot, update, args):
 
 
 def on_get_command(bot, update):
+
+    chat_id = update.message.chat_id
+
+    deactivate_conv(chat_id)
+
     keyboard = [[
         "/random",
         "/init",
     ]]
     bot.sendMessage(chat_id=update.message.chat_id,
                      text="What's up?",
-                     reply_markup=telegram.ReplyKeyboardMarkup(keyboard))
+                     reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
 
 
 def on_help_command(bot, update):
     chat_id = update.message.chat_id
+
+    deactivate_conv(chat_id)
 
     if (chat_id <= 0):
         message = """Hi there! This is Music FreidBot, and I'm here to help you with some music. I will give you music after some number of messages. Just call me with /init and a number of how many messages I should wait.
@@ -78,6 +100,8 @@ Enjoy some good music, provided by http://muzis.ru/"""
 def get_random_soundtrack(bot, update):
     url = get_track_url()
     chat_id = update.message.chat_id
+
+    deactivate_conv(chat_id)
 
     wait_text = "Please wait a few seconds, i'm sending you an audio :)"
     bot.sendMessage(chat_id=chat_id, text=wait_text)
