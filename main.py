@@ -11,16 +11,17 @@ logging.basicConfig( format='%(asctime)s - %(name)s - %(levelname)s - %(message)
                      level=logging.WARNING )
 
 # wrappers
-def addHandlers( handlers ):
+def add_handlers( handlers ):
     for handler in handlers:
         dispatcher.add_handler( handler )
 
 
-# def produceHandlers(  )
+# def produceHandlers(  ):
+#     pass
 
 
-
-def start(bot, update):
+# handler's functions
+def on_start_command(bot, update):
     user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
     invitation = 'Hello ' + user_name + '!'
     main_text = ''' i'm Grandfather FreidBot and i'm going to help you :)
@@ -29,7 +30,9 @@ def start(bot, update):
     chat_id = update.message.chat_id
     bot.sendMessage(chat_id=chat_id, text=invitation + main_text)
 
-
+def on_unknown_command(bot, update):
+    bot.sendMessage( chat_id=update.message.chat_id,
+                     text="Sorry, but I don't know what {0} means".format(update.message.text))
 
 
 def grandfather_freid(bot, update):
@@ -44,11 +47,13 @@ def grandfather_freid(bot, update):
     bot.sendMessage(chat_id=chat_id, text=message_text)
 
 # handlers
-onStartCommand = CommandHandler( 'start', start )
+on_start_handler = CommandHandler( 'start', on_start_command )
+on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
 freid_handler = MessageHandler([Filters.text], grandfather_freid)
 
+
 # assign handlers
-addHandlers( [ freid_handler, onStartCommand ] )
+add_handlers( [ freid_handler, on_start_handler, on_unknown_handler ] )
 
 
 # start your engines
