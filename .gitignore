@@ -1,4 +1,5 @@
+*.pyc
 .idea
 credentials.py
 __pycache__/
-credentials.pyc
+

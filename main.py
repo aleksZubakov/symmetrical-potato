@@ -1,8 +1,8 @@
 from  __future__ import print_function
 import logging
 import credentials
+from muzis_api_requests import get_track_url
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
-
 
 # setup updater, dispatcher, and logging
 updater = Updater( token=credentials.token )
@@ -36,24 +36,31 @@ def on_unknown_command(bot, update):
 
 
 def grandfather_freid(bot, update):
-    message_text = update.messsage.text
+    message_text = update.message.text
 
     """
     here will be ibm module
     """
     music_result = 'bla_bla'
 
-    chat_id = update.messsage.chat_id
+    chat_id = update.message.chat_id
     bot.sendMessage(chat_id=chat_id, text=message_text)
+
+def get_soundtrack(bot, update):
+    url = get_track_url()
+    chat_id = update.message.chat_id
+
+    bot.sendAudio(chat_id=chat_id, audio=url)
 
 # handlers
 on_start_handler = CommandHandler( 'start', on_start_command )
 on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
 freid_handler = MessageHandler([Filters.text], grandfather_freid)
+get_audio_handler = CommandHandler('audio', get_soundtrack)
 
 
 # assign handlers
-add_handlers( [ freid_handler, on_start_handler, on_unknown_handler ] )
+add_handlers( [ freid_handler, on_start_handler, get_audio_handler, on_unknown_handler] )
 
 
 # start your engines
