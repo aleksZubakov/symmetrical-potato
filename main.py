@@ -46,17 +46,19 @@ def grandfather_freid(bot, update):
     chat_id = update.message.chat_id
     bot.sendMessage(chat_id=chat_id, text=message_text)
 
-def get_soundtrack(bot, update):
+def get_random_soundtrack(bot, update):
     url = get_track_url()
     chat_id = update.message.chat_id
 
+    wait_text = "Please wait a few seconds, i'm sending you an audio :)"
+    bot.sendMessage(chat_id=chat_id, text=wait_text)
     bot.sendAudio(chat_id=chat_id, audio=url)
 
 # handlers
 on_start_handler = CommandHandler( 'start', on_start_command )
 on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
 freid_handler = MessageHandler([Filters.text], grandfather_freid)
-get_audio_handler = CommandHandler('audio', get_soundtrack)
+get_audio_handler = CommandHandler('random_audio', get_random_soundtrack)
 
 
 # assign handlers
