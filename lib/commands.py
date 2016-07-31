@@ -24,11 +24,12 @@ def deactivate_conv( chat_id ):
 
 
 def on_start_command(bot, update):
+    print(CURRENT_CHATS)
 
     chat_id = update.message.chat_id
 
     active = CURRENT_CHATS[chat_id] = dict()
-    active['conv_active'] = True
+    active['conv_active'] = False
     active['messages'] = str()
     active['fav_genre'] = 7
 
@@ -47,12 +48,11 @@ def on_start_command(bot, update):
             InlineKeyboardButton('metal', callback_data='1 metal'),
             InlineKeyboardButton('r&b', callback_data='2 r&b')
         ],[
-            InlineKeyboardButton('hip-hop', callback_data='3 hip-hop'),
-            InlineKeyboardButton('soul', callback_data='4 soul'),
-            InlineKeyboardButton('jazz', callback_data='5 jazz')
+            InlineKeyboardButton('soul', callback_data='3 soul'),
+            InlineKeyboardButton('jazz', callback_data='4 jazz'),
+            InlineKeyboardButton('pop', callback_data='5 pop'),
         ], [
-            InlineKeyboardButton('pop', callback_data='6 pop'),
-            InlineKeyboardButton('all', callback_data='7 all')
+            InlineKeyboardButton('TOP 500', callback_data='6 all')
         ]
         ]
 
@@ -68,7 +68,7 @@ def on_start_command(bot, update):
 
 
 def on_init_command(bot, update, args):
-
+    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
 # POSSIBLE ERRORS HANDLERS
@@ -104,6 +104,7 @@ def on_init_command(bot, update, args):
 
 
 def on_get_command(bot, update):
+    print(CURRENT_CHATS)
 
     chat_id = update.message.chat_id
 
@@ -120,6 +121,7 @@ def on_get_command(bot, update):
 
 
 def on_help_command(bot, update):
+    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
     deactivate_conv(chat_id)
@@ -136,6 +138,8 @@ Enjoy some good music, provided by http://muzis.ru/"""
 
 
 def get_random_soundtrack(bot, update):
+
+    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
     deactivate_conv(chat_id)
@@ -144,11 +148,13 @@ def get_random_soundtrack(bot, update):
     bot.sendMessage(chat_id=chat_id,
                     text="Please wait a few seconds, i'm sending you an audio :)")
 
-    url, performer, title = get_random(CURRENT_CHATS[chat_id]['fav_genre'])
-    bot.sendAudio(chat_id=chat_id, audio=url, performer=performer, title=title)
+    url = get_random(CURRENT_CHATS[chat_id]['fav_genre'])
+    bot.sendAudio(chat_id=chat_id, audio=url)
 
 
 def on_hey_command(bot, update):
+
+    print(CURRENT_CHATS)
 
     answers = [
         "How are you?",
@@ -163,6 +169,7 @@ def on_hey_command(bot, update):
     invitation = 'Hello ' + user_name + '!'
 
     chat_id = update.message.chat_id
+    deactivate_conv(chat_id)
 
     if chat_id < 0:
         bot.sendMessage(chat_id=chat_id,
@@ -180,26 +187,27 @@ def on_hey_command(bot, update):
     bot.sendMessage(chat_id=chat_id,
                     text=invitation + " " + random.choice(answers))
 
-    print(CURRENT_CHATS)
+
 
 
 def on_genre_command(bot, update):
+    print(CURRENT_CHATS)
 
     chat_id = update.message.chat_id
+    deactivate_conv(chat_id)
 
     inline_buttons = [[
-        InlineKeyboardButton('rock', callback_data='rock'),
-        InlineKeyboardButton('metal', callback_data='metal'),
-        InlineKeyboardButton('r&b', callback_data='r&b')
-    ],[
-        InlineKeyboardButton('hip hop', callback_data='hip hop'),
-        InlineKeyboardButton('soul', callback_data='soul'),
-        InlineKeyboardButton('jazz', callback_data='jazz')
-    ], [
-        InlineKeyboardButton('pop', callback_data='pop'),
-        InlineKeyboardButton('all', callback_data='all')
-    ]
-    ]
+            InlineKeyboardButton('rock', callback_data='0 rock'),
+            InlineKeyboardButton('metal', callback_data='1 metal'),
+            InlineKeyboardButton('r&b', callback_data='2 r&b')
+        ],[
+            InlineKeyboardButton('soul', callback_data='3 soul'),
+            InlineKeyboardButton('jazz', callback_data='4 jazz'),
+            InlineKeyboardButton('pop', callback_data='5 pop'),
+        ], [
+            InlineKeyboardButton('TOP 500', callback_data='6 all')
+        ]
+        ]
 
     reply_inline = InlineKeyboardMarkup(inline_buttons)
 
