@@ -9,7 +9,7 @@ def callback(bot, update):
     chat_id = query.message.chat.id
 
     splitted = query.data.split()
-    code = splitted[0]
+    code = int(splitted[0])
     genre = splitted[1]
 
     try:
