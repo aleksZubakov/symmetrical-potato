@@ -138,8 +138,8 @@ def get_random_soundtrack(bot, update):
     bot.sendMessage(chat_id=chat_id,
                     text="Please wait a few seconds, i'm sending you an audio :)")
 
-
-    bot.sendAudio(chat_id=chat_id, audio=get_random())
+    url, performer, title = get_random()
+    bot.sendAudio(chat_id=chat_id, audio=url, performer=performer, title=title)
 
 
 def on_hey_command(bot, update):
