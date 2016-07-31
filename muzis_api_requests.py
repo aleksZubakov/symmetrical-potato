@@ -7,10 +7,17 @@ from watson_developer_cloud import ToneAnalyzerV3
 import requests, requests
 
 #music dataset
-CSV_PATH = 'lastdataset.csv'
-DATASET = pd.read_csv(CSV_PATH,
-                delimiter=',',
-                index_col = False)
+def load_dataset():
+    frames = list()
+    for i in range(0, 7):
+        path = 'data/lastdataset' + str(i) + '.csv'
+        tmp_dataset = pd.read_csv(path,
+                            delimiter=',',
+                            index_col = False)
+        tmp_dataset['genre'] = i
+        frames.append(tmp_dataset)
+    return pd.concat(frames)
+DATASET = load_dataset()
 
 #formirate link for mp3
 def get_track_url(mp3_name = 'krphheaup850.mp3'):
@@ -36,7 +43,7 @@ def find_best_match(dataset, text_emotion):
         tmp = tmp[tmp[key] == nearest]
     return tmp
 
-def get_match(text):
+def get_match(text, value):
     #get emotions from IBM WATSON
     tone_anal = ToneAnalyzerV3(
                     username='2c744365-e72f-49f6-a452-d9beda1d5422',
@@ -50,15 +57,21 @@ def get_match(text):
     for tone in tone_result:
         emotions.update({tone['tone_id'] : round(tone['score'], 1)})
 
-    tracks = find_best_match(DATASET, emotions)
+    if value != 7:
+        dataset = DATASET[DATASET['genre'] == value]
+    else:
+        dataset = DATASET
+
+    tracks = find_best_match(dataset, emotions)
     tracks = tracks.sample()[['file_mp3', 'performer', 'title']]
     mp3, performer, track_name = np.squeeze(tracks.values)
     return get_track_url(mp3), performer, track_name
 
-def get_random():
-    df = DATASET.sample()[['file_mp3', 'performer', 'title']]
+def get_random(value):
+    if value != 7:
+        df = DATASET[DATASET['genre'] == value].sample()[['file_mp3', 'performer', 'title']]
+    else:
+        df = DATASET.sample()[['file_mp3', 'performer', 'title']]
     mp3, performer, track_name = np.squeeze(df.values)# DATASET.sample()[['file_mp3', 'performer', 'title']]
-
-
     return get_track_url(mp3), performer, track_name
 
