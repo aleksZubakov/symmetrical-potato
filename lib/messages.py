@@ -26,8 +26,9 @@ def on_text_message(bot, update):
         try:
             active = CURRENT_CHATS[ chat_id ]
             active['messages'] += ' ' + message_text
+            active['msg_count'] += 1
 
-            if (len(active['messages'].split(' ')) >= active['limit']):
+            if (active['msg_count'] >= active['limit']):
 
 
                 bot.sendMessage(chat_id=chat_id,
@@ -38,6 +39,7 @@ def on_text_message(bot, update):
                                       audio=url)
 
                 active['messages'] = str()
+                active['msg_count'] = 0
         except (KeyError, IndexError) :
             pass
     else:

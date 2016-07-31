@@ -57,6 +57,7 @@ def on_init_command(bot, update, args):
 
     # initiating new chat in global variable
     chat_status = CURRENT_CHATS[ chat_id ] = {}
+    chat_status['msg_count'] = 0
     chat_status['limit'] = limit
     chat_status['messages'] = str()
 
