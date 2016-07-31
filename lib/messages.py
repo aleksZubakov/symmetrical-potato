@@ -33,7 +33,7 @@ def on_text_message(bot, update):
 
                 bot.sendMessage(chat_id=chat_id,
                                 text='Music break!')
-                url, performer, title = get_match(active['messages'])
+                url, performer, title = get_match(active['messages'], active['fav_genre'])
 
                 bot.sendAudio(chat_id=chat_id, audio=url,
                               performer=performer, title=title)
@@ -54,7 +54,7 @@ def on_text_message(bot, update):
                 if (len(active['messages'].split(' ')) > 10 ):
                     bot.sendMessage(chat_id=chat_id,
                                     text="Wait a sec for some music ;)")
-                    url, performer, title = get_match(active['messages'])
+                    url, performer, title = get_match(active['messages'], active['fav_genre'])
 
                     bot.sendAudio(chat_id=chat_id, audio=url,
                               performer=performer, title=title)
@@ -71,7 +71,7 @@ def on_text_message(bot, update):
                     bot.sendMessage(chat_id=chat_id,
                                     text="Wait a sec for some music ;)")
 
-                    url, performer, title = get_match(active['messages'])
+                    url, performer, title = get_match(active['messages'], active['fav_genre'])
 
                     bot.sendAudio(chat_id=chat_id, audio=url,
                                  performer=performer, title=title)

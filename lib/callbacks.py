@@ -8,16 +8,20 @@ def callback(bot, update):
     query = update.callback_query
     chat_id = query.message.chat.id
 
+    splitted = query.data.split()
+    code = splitted[0]
+    genre = splitted[1]
+
     try:
         active = CURRENT_CHATS[chat_id]
-        active['fav_genre'] = query.data
+        active['fav_genre'] = code
     except (KeyError,IndexError):
         active = CURRENT_CHATS[ chat_id ] = {}
         active['conv_active'] = True
         active['messages'] = str()
-        active['fav_genre'] = query.data
+        active['fav_genre'] = code
 
-    genre = query.data.capitalize()
+    genre = genre.capitalize()
     if genre == 'ALL':
         message = "You will now get all music we have. To change genre in the future just use /genre command"
     else:
