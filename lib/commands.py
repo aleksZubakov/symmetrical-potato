@@ -40,6 +40,7 @@ def on_start_command(bot, update):
                     'Type /help if you want to learn more\n' \
                     'Type /random to get a random track\n' \
                     'Type /hey to start talking to me\n' \
+                    'Type /genre to choose genre of music\n' \
                     'But first, choose your favourite genre if you want to ;)'
 
         inline_buttons = [[
@@ -122,6 +123,10 @@ def on_help_command(bot, update):
 
     deactivate_conv(chat_id)
 
+    default_help = "Type /random to get a random track\n" \
+                   "Type /genre to choose genre of music\n" \
+                   "Type /help if you want to learn more\n"
+
     if (chat_id <= 0):
         message = """Hi there! This is Music FreudBot, and I'm here to help you with some music. I will give you music after some number of messages. Just call me with /init and a number of how many messages I should wait.
 Enjoy some good music, provided by http://muzis.ru/"""
@@ -130,7 +135,7 @@ Enjoy some good music, provided by http://muzis.ru/"""
 Enjoy some good music, provided by http://muzis.ru/"""
 
     bot.sendMessage( chat_id=chat_id,
-                     text=message)
+                     text=message + '\n' + default_help)
 
 
 def get_random_soundtrack(bot, update):
