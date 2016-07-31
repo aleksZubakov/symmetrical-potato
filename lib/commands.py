@@ -24,7 +24,6 @@ def deactivate_conv( chat_id ):
 
 
 def on_start_command(bot, update):
-    print(CURRENT_CHATS)
 
     chat_id = update.message.chat_id
 
@@ -68,7 +67,6 @@ def on_start_command(bot, update):
 
 
 def on_init_command(bot, update, args):
-    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
 # POSSIBLE ERRORS HANDLERS
@@ -104,7 +102,6 @@ def on_init_command(bot, update, args):
 
 
 def on_get_command(bot, update):
-    print(CURRENT_CHATS)
 
     chat_id = update.message.chat_id
 
@@ -121,7 +118,6 @@ def on_get_command(bot, update):
 
 
 def on_help_command(bot, update):
-    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
     deactivate_conv(chat_id)
@@ -139,7 +135,6 @@ Enjoy some good music, provided by http://muzis.ru/"""
 
 def get_random_soundtrack(bot, update):
 
-    print(CURRENT_CHATS)
     chat_id = update.message.chat_id
 
     deactivate_conv(chat_id)
@@ -153,8 +148,6 @@ def get_random_soundtrack(bot, update):
 
 
 def on_hey_command(bot, update):
-
-    print(CURRENT_CHATS)
 
     answers = [
         "How are you?",
@@ -177,7 +170,10 @@ def on_hey_command(bot, update):
         return
 
 
-    fav_genre = CURRENT_CHATS[chat_id]['fav_genre']
+    try:
+        fav_genre = CURRENT_CHATS[chat_id]['fav_genre']
+    except (KeyError, IndexError):
+        fav_genre = 6
 
     active = CURRENT_CHATS[ chat_id ] = {}
     active['conv_active'] = True
@@ -191,7 +187,8 @@ def on_hey_command(bot, update):
 
 
 def on_genre_command(bot, update):
-    print(CURRENT_CHATS)
+
+    CODE_TO_GENRE = [ 'Rock', 'Metal', 'R&B', 'Soul', 'Jazz', 'Pop', 'TOP 500' ]
 
     chat_id = update.message.chat_id
     deactivate_conv(chat_id)
@@ -211,8 +208,10 @@ def on_genre_command(bot, update):
 
     reply_inline = InlineKeyboardMarkup(inline_buttons)
 
+    extra_message = "{0} now selected".format(CODE_TO_GENRE[CURRENT_CHATS[chat_id]['fav_genre']])
+
     bot.sendMessage(chat_id=chat_id,
-                    text="Choose your favourite genre, or select all to get everything!!!",
+                    text=extra_message + "\nChoose your favourite genre, or select TOP 500 to get our best songs!!!",
                     reply_markup = reply_inline)
 
 
