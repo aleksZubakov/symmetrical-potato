@@ -5,6 +5,7 @@ from telegram.ext import Updater, MessageHandler, Filters
 import credentials
 from lib.commands import COMMAND_EXPORT
 from lib.messages import MESSAGES_EXPORT
+from lib.callbacks import CALLBACK_EXPORT
 
 #initialize
 
@@ -31,7 +32,7 @@ on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
 
 
 # assign handlers
-add_handlers( COMMAND_EXPORT + MESSAGES_EXPORT + [ on_unknown_handler ] )
+add_handlers( COMMAND_EXPORT + MESSAGES_EXPORT + CALLBACK_EXPORT + [ on_unknown_handler ] )
 
 
 

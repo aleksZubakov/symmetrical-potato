@@ -1,6 +1,8 @@
 import telegram
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler
 import random
+
 
 from globals import CURRENT_CHATS
 from muzis_api_requests import *
@@ -22,13 +24,41 @@ def deactivate_conv( chat_id ):
 
 
 def on_start_command(bot, update):
-    user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
-    invitation = 'Hello ' + user_name + '!'
-    main_text = ''' i'm Grandfather FreidBot and i'm going to help you :)
-                '''
 
     chat_id = update.message.chat_id
-    bot.sendMessage(chat_id=chat_id, text=invitation + main_text)
+
+    if chat_id > 0:
+        user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
+        invitation = 'Hey there, ' + user_name + '!'
+        # main_text = 'i\'m Grandfather FreidBot and i\'m going to help you :)'
+        main_text = 'I am Grandfather FreidBot, and I am going to help you\n' \
+                    'Type /help if you want to learn more\n' \
+                    'Type /random to get a random track\n' \
+                    'Type /hey to start talking to me\n' \
+                    'But first, choose your favourite genre if you want to ;)'
+
+        inline_buttons = [[
+            InlineKeyboardButton('rock', callback_data='rock'),
+            InlineKeyboardButton('metal', callback_data='metal'),
+            InlineKeyboardButton('r&b', callback_data='r&b')
+        ],[
+            InlineKeyboardButton('hip hop', callback_data='hip hop'),
+            InlineKeyboardButton('soul', callback_data='soul'),
+            InlineKeyboardButton('jazz', callback_data='jazz')
+        ], [
+            InlineKeyboardButton('all', callback_data='all')
+        ]
+        ]
+
+        reply_inline = InlineKeyboardMarkup(inline_buttons)
+
+        bot.sendMessage(chat_id=chat_id,
+                        text=invitation + main_text,
+                        reply_markup=reply_inline)
+
+
+
+    # bot.sendMessage(chat_id=chat_id, text=invitation + main_text)
 
 
 def on_init_command(bot, update, args):
@@ -73,13 +103,14 @@ def on_get_command(bot, update):
 
     deactivate_conv(chat_id)
 
-    keyboard = [[
-        "/random",
-        "/init",
-    ]]
+    # keyboard = [[
+    #     "/random",
+    #     "/init",
+    # ]]
     bot.sendMessage(chat_id=update.message.chat_id,
-                     text="What's up?",
-                     reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True))
+                     text="What's up?"
+                     # reply_markup=telegram.ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
+                    )
 
 
 def on_help_command(bot, update):
@@ -132,15 +163,42 @@ def on_hey_command(bot, update):
                         text="Sorry, but /hey only available in one-on-one talks with the great Doctor @MusicFreid_bot")
         return
 
+
+    fav_genre = CURRENT_CHATS[chat_id]['fav_genre']
+
     active = CURRENT_CHATS[ chat_id ] = {}
     active['conv_active'] = True
     active['messages'] = str()
+    active['fav_genre'] = fav_genre
 
     bot.sendMessage(chat_id=chat_id,
                     text=invitation + " " + random.choice(answers))
 
     print(CURRENT_CHATS)
 
+
+def on_genre_command(bot, update):
+
+    chat_id = update.message.chat_id
+
+    inline_buttons = [[
+        InlineKeyboardButton('rock', callback_data='rock'),
+        InlineKeyboardButton('metal', callback_data='metal'),
+        InlineKeyboardButton('r&b', callback_data='r&b')
+    ],[
+        InlineKeyboardButton('hip hop', callback_data='hip hop'),
+        InlineKeyboardButton('soul', callback_data='soul'),
+        InlineKeyboardButton('jazz', callback_data='jazz')
+    ], [
+        InlineKeyboardButton('all', callback_data='all')
+    ]
+    ]
+
+    reply_inline = InlineKeyboardMarkup(inline_buttons)
+
+    bot.sendMessage(chat_id=chat_id,
+                    text="Choose your favourite genre, or select all to get everything!!!",
+                    reply_markup = reply_inline)
 
 
 
@@ -155,5 +213,6 @@ COMMAND_EXPORT = [ CommandHandler('start', on_start_command),
                    CommandHandler('get', on_get_command),
                    CommandHandler('help', on_help_command),
                    CommandHandler('random', get_random_soundtrack),
-                   CommandHandler('hey', on_hey_command)
+                   CommandHandler('hey', on_hey_command),
+                   CommandHandler('genre', on_genre_command)
                    ]
