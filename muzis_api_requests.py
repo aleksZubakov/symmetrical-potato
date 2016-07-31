@@ -68,7 +68,7 @@ def get_match(text, value):
 
     tracks = find_best_match(DATASET[DATASET['genre'] == value], emotions)
     #tracks = tracks.sample()[['file_mp3', 'performer', 'title']]
-    mp3 = random.choice(tracks['file_mp3'])
+    mp3 = random.choice(tracks['file_mp3'].tolist())
     return get_track_url(mp3) #, performer, track_name
 
 def get_random(value):
@@ -79,6 +79,6 @@ def get_random(value):
         df = DATASET.sample()[['file_mp3', 'performer', 'title']]
     '''
     df = DATASET[DATASET['genre'] == value]
-    mp3 = random.choice(df['file_mp3'])# DATASET.sample()[['file_mp3', 'performer', 'title']]
+    mp3 = random.choice(df['file_mp3'].tolist())# DATASET.sample()[['file_mp3', 'performer', 'title']]
     return get_track_url(mp3)
 
