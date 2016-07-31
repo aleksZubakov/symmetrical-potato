@@ -27,6 +27,11 @@ def on_start_command(bot, update):
 
     chat_id = update.message.chat_id
 
+    active = CURRENT_CHATS[chat_id] = dict()
+    active['conv_active'] = True
+    active['messages'] = str()
+    active['fav_genre'] = 7
+
     if chat_id > 0:
         user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
         invitation = 'Hey there, ' + user_name + '!'
@@ -38,15 +43,16 @@ def on_start_command(bot, update):
                     'But first, choose your favourite genre if you want to ;)'
 
         inline_buttons = [[
-            InlineKeyboardButton('rock', callback_data='rock'),
-            InlineKeyboardButton('metal', callback_data='metal'),
-            InlineKeyboardButton('r&b', callback_data='r&b')
+            InlineKeyboardButton('rock', callback_data='0 rock'),
+            InlineKeyboardButton('metal', callback_data='1 metal'),
+            InlineKeyboardButton('r&b', callback_data='2 r&b')
         ],[
-            InlineKeyboardButton('hip hop', callback_data='hip hop'),
-            InlineKeyboardButton('soul', callback_data='soul'),
-            InlineKeyboardButton('jazz', callback_data='jazz')
+            InlineKeyboardButton('hip-hop', callback_data='3 hip-hop'),
+            InlineKeyboardButton('soul', callback_data='4 soul'),
+            InlineKeyboardButton('jazz', callback_data='5 jazz')
         ], [
-            InlineKeyboardButton('all', callback_data='all')
+            InlineKeyboardButton('pop', callback_data='6 pop'),
+            InlineKeyboardButton('all', callback_data='7 all')
         ]
         ]
 
@@ -119,10 +125,10 @@ def on_help_command(bot, update):
     deactivate_conv(chat_id)
 
     if (chat_id <= 0):
-        message = """Hi there! This is Music FreidBot, and I'm here to help you with some music. I will give you music after some number of messages. Just call me with /init and a number of how many messages I should wait.
+        message = """Hi there! This is Music FreudBot, and I'm here to help you with some music. I will give you music after some number of messages. Just call me with /init and a number of how many messages I should wait.
 Enjoy some good music, provided by http://muzis.ru/"""
     else:
-        message = """Hi there! This is Music FreidBot, and I'm here to help you with some music. Just call me with /hey command and tell me how you feel, and I will find something special for you :)
+        message = """Hi there! This is Music FreudBot, and I'm here to help you with some music. Just call me with /hey command and tell me how you feel, and I will find something special for you :)
 Enjoy some good music, provided by http://muzis.ru/"""
 
     bot.sendMessage( chat_id=chat_id,
@@ -138,7 +144,7 @@ def get_random_soundtrack(bot, update):
     bot.sendMessage(chat_id=chat_id,
                     text="Please wait a few seconds, i'm sending you an audio :)")
 
-    url, performer, title = get_random()
+    url, performer, title = get_random(CURRENT_CHATS[chat_id]['fav_genre'])
     bot.sendAudio(chat_id=chat_id, audio=url, performer=performer, title=title)
 
 
@@ -190,6 +196,7 @@ def on_genre_command(bot, update):
         InlineKeyboardButton('soul', callback_data='soul'),
         InlineKeyboardButton('jazz', callback_data='jazz')
     ], [
+        InlineKeyboardButton('pop', callback_data='pop'),
         InlineKeyboardButton('all', callback_data='all')
     ]
     ]
