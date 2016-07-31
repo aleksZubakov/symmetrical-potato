@@ -24,7 +24,7 @@ columns = ['anger',
            'title']
 music_dataset = pd.DataFrame(columns=columns)
 
-for i in  range(0 ,len(txtlines)):
+for i in  range(300 ,len(txtlines)):
     line = txtlines[i].split("\t")
     req_line = line[1]+' '+line[2]
     data = {
@@ -51,6 +51,11 @@ for i in  range(0 ,len(txtlines)):
             music_dataset.loc[len(music_dataset)] = a_list
     print(i)
 
+def changeencode(data, cols):
+    for col in cols:
+        data[col] = data[col].str.decode('iso-8859-1').str.encode('utf-8')
+    return data
+music_dataset = changeencode(music_dataset, ['performer', 'title'])
 music_dataset.to_csv('lastdataset.csv')
 
 

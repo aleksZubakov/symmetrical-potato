@@ -9,13 +9,21 @@ import requests, requests
 #music dataset
 def load_dataset():
     frames = list()
-    for i in range(0, 7):
-        path = 'data/lastdataset' + str(i) + '.csv'
+    for i in range(0, 6):
+        path = 'data/dataset' + str(i) + '.csv'
         tmp_dataset = pd.read_csv(path,
                             delimiter=',',
                             index_col = False)
         tmp_dataset['genre'] = i
         frames.append(tmp_dataset)
+
+    path = 'data/top_500.csv'
+    tmp_dataset = pd.read_csv(path,
+                        delimiter=',',
+                        index_col = False)
+    tmp_dataset['genre'] = 6
+    frames.append(tmp_dataset)
+
     return pd.concat(frames)
 DATASET = load_dataset()
 
@@ -57,21 +65,20 @@ def get_match(text, value):
     for tone in tone_result:
         emotions.update({tone['tone_id'] : round(tone['score'], 1)})
 
-    if value != 7:
-        dataset = DATASET[DATASET['genre'] == value]
-    else:
-        dataset = DATASET
 
-    tracks = find_best_match(dataset, emotions)
-    tracks = tracks.sample()[['file_mp3', 'performer', 'title']]
-    mp3, performer, track_name = np.squeeze(tracks.values)
-    return get_track_url(mp3), performer, track_name
+    tracks = find_best_match(DATASET[DATASET['genre'] == value], emotions)
+    #tracks = tracks.sample()[['file_mp3', 'performer', 'title']]
+    mp3 = random.choice(tracks['file_mp3'])
+    return get_track_url(mp3) #, performer, track_name
 
 def get_random(value):
+    '''
     if value != 7:
         df = DATASET[DATASET['genre'] == value].sample()[['file_mp3', 'performer', 'title']]
     else:
         df = DATASET.sample()[['file_mp3', 'performer', 'title']]
-    mp3, performer, track_name = np.squeeze(df.values)# DATASET.sample()[['file_mp3', 'performer', 'title']]
-    return get_track_url(mp3), performer, track_name
+    '''
+    df = DATASET[DATASET['genre'] == value]
+    mp3 = random.choice(df['file_mp3'])# DATASET.sample()[['file_mp3', 'performer', 'title']]
+    return get_track_url(mp3)
 
