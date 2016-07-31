@@ -44,7 +44,7 @@ for i in  range(0 ,len(txtlines)):
             round(tmp['document_tone']['tone_categories'][0]['tones'][3]['score'], 1), # joy
             round(tmp['document_tone']['tone_categories'][0]['tones'][4]['score'], 1), # sadness
             answer['file_mp3']]
-        music_dataset.loc[len(music_dataset)] = a_list
+            music_dataset.loc[len(music_dataset)] = a_list
         print(music_dataset)
 
 
