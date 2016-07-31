@@ -31,7 +31,7 @@ def on_start_command(bot, update):
     active = CURRENT_CHATS[chat_id] = dict()
     active['conv_active'] = False
     active['messages'] = str()
-    active['fav_genre'] = 7
+    active['fav_genre'] = 6
 
     if chat_id > 0:
         user_name = update.message.from_user['first_name'] + ' ' + update.message.from_user['last_name']
