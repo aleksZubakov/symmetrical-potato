@@ -10,6 +10,7 @@ from muzis_api_requests import *
 
 
 def on_text_message(bot, update):
+    print(CURRENT_CHATS)
 
     more_answers = [
         "Anything else?",
@@ -35,9 +36,7 @@ def on_text_message(bot, update):
                                 text='Music break!')
                 url, performer, title = get_match(active['messages'], active['fav_genre'])
 
-                bot.sendAudio(chat_id=chat_id, audio=url,
-                              performer=performer, title=title)
-
+                bot.sendAudio(chat_id=chat_id, audio=url)
 
                 active['messages'] = str()
                 active['msg_count'] = 0
@@ -56,8 +55,7 @@ def on_text_message(bot, update):
                                     text="Wait a sec for some music ;)")
                     url, performer, title = get_match(active['messages'], active['fav_genre'])
 
-                    bot.sendAudio(chat_id=chat_id, audio=url,
-                              performer=performer, title=title)
+                    bot.sendAudio(chat_id=chat_id, audio=url)
                     active['conv_active'] = False
                     active['messages'] = str()
                     return
@@ -73,8 +71,7 @@ def on_text_message(bot, update):
 
                     url, performer, title = get_match(active['messages'], active['fav_genre'])
 
-                    bot.sendAudio(chat_id=chat_id, audio=url,
-                                 performer=performer, title=title)
+                    bot.sendAudio(chat_id=chat_id, audio=url)
                     active['conv_active'] = False
                     active['messages'] = str()
                     return
