@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler
 import random
 
 from globals import CURRENT_CHATS
-from muzis_api_requests import get_track_url
+from muzis_api_requests import *
 
 
 
@@ -14,7 +14,7 @@ def deactivate_conv( chat_id ):
         try:
             active = CURRENT_CHATS[chat_id]
             active['conv_active'] = False
-            active['messages'] = []
+            active['messages'] = str()
 
         except (KeyError, IndexError):
             pass
@@ -58,7 +58,7 @@ def on_init_command(bot, update, args):
     # initiating new chat in global variable
     chat_status = CURRENT_CHATS[ chat_id ] = {}
     chat_status['limit'] = limit
-    chat_status['messages'] = list()
+    chat_status['messages'] = str()
 
     # print(CURRENT_CHATS)
 
@@ -98,15 +98,16 @@ Enjoy some good music, provided by http://muzis.ru/"""
 
 
 def get_random_soundtrack(bot, update):
-    url = get_track_url()
     chat_id = update.message.chat_id
 
     deactivate_conv(chat_id)
 
-    wait_text = "Please wait a few seconds, i'm sending you an audio :)"
-    bot.sendMessage(chat_id=chat_id, text=wait_text)
 
-    bot.sendAudio(chat_id=chat_id, audio=url)
+    bot.sendMessage(chat_id=chat_id,
+                    text="Please wait a few seconds, i'm sending you an audio :)")
+
+
+    bot.sendAudio(chat_id=chat_id, audio=get_random())
 
 
 def on_hey_command(bot, update):
@@ -132,7 +133,7 @@ def on_hey_command(bot, update):
 
     active = CURRENT_CHATS[ chat_id ] = {}
     active['conv_active'] = True
-    active['messages'] = list()
+    active['messages'] = str()
 
     bot.sendMessage(chat_id=chat_id,
                     text=invitation + " " + random.choice(answers))

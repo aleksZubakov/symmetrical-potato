@@ -3,7 +3,7 @@ from telegram.ext import MessageHandler, Filters
 import random
 
 from globals import CURRENT_CHATS
-from muzis_api_requests import get_track_url
+from muzis_api_requests import *
 
 # helpers TODO!!
 # def sendMusic(  )
@@ -25,15 +25,19 @@ def on_text_message(bot, update):
     if chat_id < 0:
         try:
             active = CURRENT_CHATS[ chat_id ]
-            active['messages'].append(message_text)
+            active['messages'] += ' ' + message_text
 
-            if (len(active['messages']) >= active['limit']):
+            if (len(active['messages'].split(' ')) >= active['limit']):
 
-                active['messages'] = list()
+
                 bot.sendMessage(chat_id=chat_id,
                                 text='Music break!')
+
+                url = get_match(active['messages'])
                 bot.sendAudio(chat_id=chat_id,
-                              audio=get_track_url())
+                                      audio=url)
+
+                active['messages'] = str()
         except (KeyError, IndexError) :
             pass
     else:
@@ -42,29 +46,32 @@ def on_text_message(bot, update):
             if active['conv_active'] == False:
 
                 active['conv_active'] = True
-                active['messages'] = [] + message_text.split(" ")
+                active['messages'] += ' ' + message_text
 
-                if ( len(active['messages']) > 10 ):
+                if (len(active['messages'].split(' ')) > 10 ):
                     bot.sendMessage(chat_id=chat_id,
                                     text="Wait a sec for some music ;)")
+                    url = get_match(active['messages'])
                     bot.sendAudio(chat_id=chat_id,
-                                  audio=get_track_url())
+                                  audio=url)
                     active['conv_active'] = False
-                    active['messages'] = []
+                    active['messages'] = str()
                     return
 
                 bot.sendMessage(chat_id=chat_id,
                                 text="Hey, how are you?")
             else:
-                active['messages'] += message_text.split(" ")
+                active['messages'] += ' ' + message_text
 
-                if (len(active['messages']) > 10):
+                if (len(active['messages'].split(' ')) > 10 ):
                     bot.sendMessage(chat_id=chat_id,
                                     text="Wait a sec for some music ;)")
+
+                    url = get_match(active['messages'])
                     bot.sendAudio(chat_id=chat_id,
-                                  audio=get_track_url())
+                                  audio=url)
                     active['conv_active'] = False
-                    active['messages'] = []
+                    active['messages'] = str()
                     return
                 else:
                     bot.sendMessage(chat_id=chat_id,

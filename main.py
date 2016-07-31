@@ -6,6 +6,9 @@ import credentials
 from lib.commands import COMMAND_EXPORT
 from lib.messages import MESSAGES_EXPORT
 
+#initialize
+
+
 # setup updater, dispatcher, and logging
 updater = Updater( token=credentials.token )
 dispatcher = updater.dispatcher
@@ -29,6 +32,7 @@ on_unknown_handler = MessageHandler( [ Filters.command ], on_unknown_command )
 
 # assign handlers
 add_handlers( COMMAND_EXPORT + MESSAGES_EXPORT + [ on_unknown_handler ] )
+
 
 
 # start your engines
